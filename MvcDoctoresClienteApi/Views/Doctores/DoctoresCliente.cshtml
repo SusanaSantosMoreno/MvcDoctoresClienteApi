@@ -1,0 +1,101 @@
+﻿@{
+    ViewData["Title"] = "Doctores Cliente AJAX";
+}
+
+<h1>Consume Api Cliente</h1>
+<div class="card mt-3">
+    <div class="card-body p-4">
+        <form method="post">
+            <div class="form-group">
+                <label>Seleccione especialidad</label>
+                <select class="form-control" id="especialidad">
+                </select>
+                <button type="button" class="btn btn-outline-dark mt-3 float-right" id="botonBuscar">Mostrar Doctores</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<table class="table mt-3 text-center" id="tablaDoctores">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Apellido</th>
+            <th scope="col">Especialidad</th>
+            <th scope="col">Salario</th>
+            <th scope="col">Hospital</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@section  scripts{ 
+<script type="text/javascript">
+    var url = "https://apihospitalssm.azurewebsites.net/";
+    $(document).ready(function () {
+        cargarDoctores();
+        cargarEspecialidades();
+
+        $("#botonBuscar").click(function () {
+            console.log("click");
+            var especialidad = $("#especialidad option:selected").val();
+            var request = "api/Doctores/GetDoctoresEspecialidad/" + especialidad;
+            $.ajax({
+                url: url + request,
+                method: "GET",
+                dataType: "json",
+                success: function (data) {
+                    var html = "";
+                    $.each(data, function (ind, doctor) {
+                        html += "<tr>";
+                        html += `<td>${doctor.apellido}</td>`;
+                        html += `<td>${doctor.especialidad}</td>`;
+                        html += `<td>${doctor.salario}</td>`;
+                        html += `<td>${doctor.hospital}</td>`;
+                        html += "</tr>";
+                    });
+                    $("#tablaDoctores tbody").html(html);
+                }
+            });
+        });
+    });
+
+    function cargarDoctores() {
+        var request = "api/Doctores";
+        $.ajax({
+            url: url + request,
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                var html = "";
+                $.each(data, function (ind, doctor) {
+                    html += "<tr>";
+                    html += `<td>${doctor.apellido}</td>`;
+                    html += `<td>${doctor.especialidad}</td>`;
+                    html += `<td>${doctor.salario}</td>`;
+                    html += `<td>${doctor.hospital}</td>`;
+                    html += "</tr>";
+                });
+                $("#tablaDoctores tbody").html(html);
+            }
+        });
+    }
+
+    function cargarEspecialidades() {
+        var request = "api/Doctores/GetEspecialidades";
+        $.ajax({
+            url: url + request,
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                var html = "";
+                $.each(data, function (ind, especialidad) {
+                    html += `<option value="${especialidad}">${especialidad}</option>`;
+                });
+                $("#especialidad").html(html);
+            }
+        });
+    }
+
+    
+</script>
+}
