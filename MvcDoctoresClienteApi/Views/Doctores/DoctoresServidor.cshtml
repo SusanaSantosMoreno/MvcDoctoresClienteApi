@@ -1,0 +1,76 @@
+﻿@model IEnumerable<MvcDoctoresClienteApi.Models.Doctor>
+
+@{
+    ViewData["Title"] = "DoctoresServidor";
+    List<String> especialidades = ViewData["Especialidades"] as List<String>;
+}
+
+<h1>DoctoresServidor</h1>
+<div class="card mt-3">
+    <div class="card-body p-4">
+        <form method="post">
+            <div class="form-group">
+                <label>Seleccione especialidad</label>
+                <select class="form-control" name="especialidad">
+                    @foreach(String especialidad in especialidades) {
+                        <option value="@especialidad">@especialidad</option>
+                    }
+                </select>
+                <button type="submit" class="btn btn-outline-dark mt-3
+                        float-right">
+                    Mostrar Doctores
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<table class="table mt-3 text-center">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IdDoctor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Apellido)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Especialidad)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Hospital)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Salario)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null) {
+            @foreach (var item in Model) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdDoctor)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Apellido)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Especialidad)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Hospital)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Salario)
+                    </td>
+                    <td>
+                        <a asp-action="DoctoresDetalle" asp-controller="Doctores" 
+                           asp-route-idDoctor="@item.IdDoctor">Detalle</a>
+                    </td>
+                </tr>
+            }
+        }
+
+    </tbody>
+</table>

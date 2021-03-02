@@ -10,7 +10,8 @@
                 <label>Seleccione especialidad</label>
                 <select class="form-control" id="especialidad">
                 </select>
-                <button type="button" class="btn btn-outline-dark mt-3 float-right" id="botonBuscar">Mostrar Doctores</button>
+                <button type="button" class="btn btn-outline-dark mt-3 
+                        float-right" id="botonBuscar">Mostrar Doctores</button>
             </div>
         </form>
     </div>
@@ -23,6 +24,7 @@
             <th scope="col">Especialidad</th>
             <th scope="col">Salario</th>
             <th scope="col">Hospital</th>
+            <th></th>
         </tr>
     </thead>
     <tbody></tbody>
@@ -51,11 +53,16 @@
                         html += `<td>${doctor.especialidad}</td>`;
                         html += `<td>${doctor.salario}</td>`;
                         html += `<td>${doctor.hospital}</td>`;
+                        html += `<td><a class="detalle" data-idDoctor="${doctor.idDoctor}" href="#">Detalle</a></td>`;
                         html += "</tr>";
                     });
                     $("#tablaDoctores tbody").html(html);
                 }
             });
+        });
+
+        $(".detalle").click(function () {
+            console.log($(this).data("iddoctor"));
         });
     });
 
@@ -73,11 +80,13 @@
                     html += `<td>${doctor.especialidad}</td>`;
                     html += `<td>${doctor.salario}</td>`;
                     html += `<td>${doctor.hospital}</td>`;
+                    html += `<td><a class="detalle" data-   ="${doctor.idDoctor}" href="#">Detalle</a></td>`;
                     html += "</tr>";
                 });
                 $("#tablaDoctores tbody").html(html);
             }
         });
+
     }
 
     function cargarEspecialidades() {
