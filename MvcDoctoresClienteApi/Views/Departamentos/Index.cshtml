@@ -1,0 +1,130 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+<h1>Departamentos</h1>
+<div class="card p-4 mt-3">
+    <div class="card-body">
+        <form>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label for="cajaId">Id</label>
+                    <input type="Text" class="form-control" id="cajaId">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="cajaNombre">Nombre</label>
+                    <input type="text" class="form-control" id="cajaNombre">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="cajaLoc">Localidad</label>
+                    <input type="Text" class="form-control" id="cajaLoc">
+                </div>
+            </div>
+            <div class="m-0 w-50 float-right row">
+                <button type="button" id="botonInsertar" class="btn btn-outline-success mr-3 col">Insertar</button>
+                <button type="button" id="botonModificar" class="btn btn-outline-warning mr-3 col">Modificar</button>
+                <button type="button" id="botonEliminar" class="btn btn-outline-danger col">Eliminar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<table class="table mt-3 text-center" id="tablaDepartamentos">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Localidad</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@section scripts{
+    <script type="text/javascript">
+    var url = "https://apihospitalssm.azurewebsites.net/";
+    $(document).ready(function () {
+        cargarDepartamentos();
+
+        $("#botonEliminar").click(function () {
+            var id = $("#cajaId").val();
+            var request = "api/Departamentos/" + id;
+            $.ajax({
+                url: url + request,
+                type: "DELETE",
+                success: function () {
+                    $("#cajaId").val("");
+                    cargarDepartamentos();
+                }
+            });
+        });
+
+        $("#botonInsertar").click(function () {
+            var id = parseInt($("#cajaId").val());
+            var request = "api/Departamentos";
+            var departamento = new Object();
+            departamento.idDepartamento = id;
+            departamento.nombre = $("#cajaNombre").val();
+            departamento.localidad = $("#cajaLoc").val();
+
+            var json = JSON.stringify(departamento);
+
+            $.ajax({
+                url: url + request,
+                type: "POST",
+                data: json,
+                contentType: "application/json",
+                success: function (data) {
+                    $("#cajaId").val("");
+                    $("#cajaNombre").val("");
+                    $("#cajaLoc").val("");
+                    cargarDepartamentos();
+                }
+            })
+        });
+
+        $("#botonModificar").click(function () {
+            var id = parseInt($("#cajaId").val());
+            var request = "api/Departamentos";
+            var departamento = new Object();
+            departamento.idDepartamento = id;
+            departamento.nombre = $("#cajaNombre").val();
+            departamento.localidad = $("#cajaLoc").val();
+
+            var json = JSON.stringify(departamento);
+
+            $.ajax({
+                url: url + request,
+                type: "PUT",
+                data: json,
+                contentType: "application/json",
+                success: function (data) {
+                    $("#cajaId").val("");
+                    $("#cajaNombre").val("");
+                    $("#cajaLoc").val("");
+                    cargarDepartamentos();
+                }
+            })
+        })
+    });
+
+    function cargarDepartamentos() {
+        var request = "api/Departamentos";
+        $.ajax({
+            url: url + request,
+            type: "GET",
+            success: function(data) {
+                var html = "";
+                $.each(data, function (ind, dept) {
+                    html += "<tr>";
+                    html += `<td>${dept.idDepartamento}</td>`;
+                    html += `<td>${dept.nombre}</td>`;
+                    html += `<td>${dept.localidad}</td>`;
+                    html += "</tr>";
+                });
+                $("#tablaDepartamentos tbody").html(html);
+            }
+        });
+    }
+    </script>
+}
+
