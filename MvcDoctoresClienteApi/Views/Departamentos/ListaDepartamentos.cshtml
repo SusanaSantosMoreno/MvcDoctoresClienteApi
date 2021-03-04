@@ -1,0 +1,47 @@
+﻿@model IEnumerable<MvcDoctoresClienteApi.Models.Departamento>
+
+@{
+    ViewData["Title"] = "ListaDepartamentos";
+}
+
+<h1>ListaDepartamentos</h1>
+
+<p class="mt-3">
+    <a asp-action="CreateDepartamentos" asp-controller="Departamentos">Create New</a>
+</p>
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IdDepartamento)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Localidad)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdDepartamento)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Localidad)
+            </td>
+            <td>
+                @Html.ActionLink("EditDepartamentos", "EditDepartamentos", new { id = item.IdDepartamento }) |
+                @Html.ActionLink("DetailsDepartamentos", "DetailsDepartamentos", new { id = item.IdDepartamento }) |
+                @Html.ActionLink("DeleteDepartamentos", "DeleteDepartamentos", new { id = item.IdDepartamento })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
