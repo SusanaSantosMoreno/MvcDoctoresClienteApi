@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -21,7 +22,21 @@ namespace MvcCore {
         
         public void ConfigureServices(IServiceCollection services) {
             services.AddTransient(x => new ServiceApiDepartamentos(this.configuration["urlDepartamentos"]));
-            services.AddControllersWithViews();
+            services.AddTransient(x => new ServiceEmpleados(this.configuration["urlApiOAUTHEmpleados"]));
+
+            //configuramos los services para session y seguridad
+            services.AddDistributedMemoryCache();
+            services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(15);
+                options.Cookie.IsEssential = true;
+            });
+            services.AddAuthentication(options => {
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            }).AddCookie();
+
+            services.AddControllersWithViews(options => options.EnableEndpointRouting = false);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
@@ -33,11 +48,15 @@ namespace MvcCore {
             app.UseRouting();
 
             app.UseStaticFiles();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
+
+            app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseSession();
+
+            app.UseMvc(options => {
+                options.MapRoute(
                     name: "default",
-                    pattern: "{controller=Doctores}/{action=Index}/{id?}"
+                    template: "{controller=Doctores}/{action=Index}/{id?}"
                 );
             });
         }
